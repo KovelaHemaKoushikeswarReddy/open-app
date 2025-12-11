@@ -1,63 +1,64 @@
 <!doctype html>
 <html>
 <head>
-<meta charset="utf-8" />
-<title>Open App…</title>
-<meta name="viewport" content="width=device-width,initial-scale=1" />
-<style>
-body { font-family: system-ui, -apple-system, Segoe UI, Roboto, "Helvetica Neue", Arial; color:#111; background:#fff; display:flex; align-items:center; justify-content:center; min-height:100vh; margin:0; }
-.card{ max-width:520px; padding:20px; border-radius:12px; box-shadow:0 6px 24px rgba(0,0,0,0.08); text-align:center }
-a.button{ display:inline-block; margin-top:12px; padding:10px 16px; border-radius:8px; text-decoration:none; font-weight:600 }
-p.small{ color:#555; font-size:13px }
-</style>
-<script>
-(function(){
-// Read token
-const params = new URLSearchParams(location.search);
-const token = params.get('token') || '';
-const appScheme = 'vigna://?token=' + encodeURIComponent(token);
+  <meta charset="utf-8" />
+  <title>Opening…</title>
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <style>
+    body {
+      font-family: system-ui, -apple-system, Segoe UI, Roboto, Arial;
+      background:#fff;
+      color:#222;
+      margin:0;
+      padding:40px;
+      text-align:center;
+    }
+    a.button {
+      display:inline-block;
+      padding:10px 18px;
+      background:#0078ff;
+      color:#fff;
+      border-radius:8px;
+      text-decoration:none;
+      margin-top:12px;
+      font-weight:600;
+    }
+    .small { color:#666; font-size:14px; margin-top:18px; }
+    code { background:#f3f3f3; padding:4px 8px; border-radius:6px; }
+  </style>
 
+  <script>
+    document.addEventListener("DOMContentLoaded", function () {
 
-// Try to open app
-function openApp() {
-// For most browsers this will attempt to open the custom scheme
-window.location = appScheme;
-}
+      // Read ?token=... from URL
+      const params = new URLSearchParams(window.location.search);
+      const token = params.get("token") || "";
 
+      // Build your custom scheme deep link
+      const deepLink = "vigna://?token=" + encodeURIComponent(token);
 
-// When page loads try to open app
-window.addEventListener('DOMContentLoaded', function(){
-// Small delay to ensure page has rendered
-setTimeout(openApp, 50);
+      // Try to open the custom URL scheme
+      window.location = deepLink;
 
+      // Fallback: open Play Store / website if app is not installed
+      setTimeout(() => {
+        // TODO: change to your fallback URL
+        window.location = "https://play.google.com/store/apps/details?id=com.yourapp";
+      }, 1200);
 
-// After a short timeout, go to fallback (Play Store / help page)
-setTimeout(function(){
-// EDIT: change fallback URL to your app's Play Store or App Store page or a help page
-var fallback = 'https://play.google.com/store/apps/details?id=com.yourapp';
-// If you prefer a plain help page, set fallback to a GitHub README or other page
-window.location = fallback;
-}, 1200);
-
-
-// Update manual link
-var manual = document.getElementById('manual');
-if(manual) manual.href = appScheme;
-
-
-// Show token for debugging
-var tok = document.getElementById('tok');
-if(tok) tok.textContent = token || '(no token)';
-});
-})();
-</script>
+      // Update manual button
+      document.getElementById("openBtn").href = deepLink;
+      document.getElementById("tokenDisplay").textContent = token || "(none)";
+    });
+  </script>
 </head>
+
 <body>
-<div class="card">
-<h1>Opening your app…</h1>
-<p class="small">If nothing happens in a few seconds, tap the button below (or install the app from the store).</p>
-<a id="manual" class="button" href="#">Open app</a>
-<p class="small">Token: <code id="tok"></code></p>
-</div>
+  <h2>Opening your app…</h2>
+  <p>If nothing happens, click the button below:</p>
+
+  <a id="openBtn" class="button" href="#">Open App</a>
+
+  <p class="small">Token: <code id="tokenDisplay"></code></p>
 </body>
 </html>
