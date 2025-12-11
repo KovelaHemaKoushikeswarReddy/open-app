@@ -1,0 +1,131 @@
+# GitHub Pages redirect (open-app)
+
+This ready-to-upload project lets you turn a unique token into a clickable `https://` link that redirects to your custom scheme `vigna://?token=...`.
+
+---
+
+## Final URL pattern
+
+Use this template in your automated emails (replace `{TOKEN}` with the token you generate):
+
+```
+https://KovelaHemaKoushikeswarReddy.github.io/open-app/?token={TOKEN}
+```
+
+---
+
+## Files (copy these into a new repo called `open-app`)
+
+### `index.html` (single-file redirect page)
+
+```html
+<!doctype html>
+<html>
+<head>
+  <meta charset="utf-8" />
+  <title>Open App…</title>
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <style>
+    body { font-family: system-ui, -apple-system, Segoe UI, Roboto, "Helvetica Neue", Arial; color:#111; background:#fff; display:flex; align-items:center; justify-content:center; min-height:100vh; margin:0; }
+    .card{ max-width:520px; padding:20px; border-radius:12px; box-shadow:0 6px 24px rgba(0,0,0,0.08); text-align:center }
+    a.button{ display:inline-block; margin-top:12px; padding:10px 16px; border-radius:8px; text-decoration:none; font-weight:600 }
+    p.small{ color:#555; font-size:13px }
+  </style>
+  <script>
+    (function(){
+      // Read token
+      const params = new URLSearchParams(location.search);
+      const token = params.get('token') || '';
+      const appScheme = 'vigna://?token=' + encodeURIComponent(token);
+
+      // Try to open app
+      function openApp() {
+        // For most browsers this will attempt to open the custom scheme
+        window.location = appScheme;
+      }
+
+      // When page loads try to open app
+      window.addEventListener('DOMContentLoaded', function(){
+        // Small delay to ensure page has rendered
+        setTimeout(openApp, 50);
+
+        // After a short timeout, go to fallback (Play Store / help page)
+        setTimeout(function(){
+          // EDIT: change fallback URL to your app's Play Store or App Store page or a help page
+          var fallback = 'https://play.google.com/store/apps/details?id=com.yourapp';
+          // If you prefer a plain help page, set fallback to a GitHub README or other page
+          window.location = fallback;
+        }, 1200);
+
+        // Update manual link
+        var manual = document.getElementById('manual');
+        if(manual) manual.href = appScheme;
+
+        // Show token for debugging
+        var tok = document.getElementById('tok');
+        if(tok) tok.textContent = token || '(no token)';
+      });
+    })();
+  </script>
+</head>
+<body>
+  <div class="card">
+    <h1>Opening your app…</h1>
+    <p class="small">If nothing happens in a few seconds, tap the button below (or install the app from the store).</p>
+    <a id="manual" class="button" href="#">Open app</a>
+    <p class="small">Token: <code id="tok"></code></p>
+  </div>
+</body>
+</html>
+```
+
+---
+
+### `README.md` (usage + publish steps)
+
+```md
+# open-app (GitHub Pages redirect)
+
+This repo provides a single `index.html` page which reads a `token` query parameter and attempts to open your app using the custom scheme `vigna://?token=...`. If the app isn't installed, it falls back to a configurable web URL (e.g. Play Store).
+
+## How to use
+
+1. Create a new GitHub repository named `open-app` under the user **KovelaHemaKoushikeswarReddy**.
+2. Add `index.html` (copy from this repo) to the repository and commit to the `main` branch.
+3. In the repository **Settings > Pages**, select branch `main` and `/ (root)` folder, then save. GitHub Pages will publish the site at:
+
+   `https://KovelaHemaKoushikeswarReddy.github.io/open-app/`
+
+4. In your automated mails include a link using the pattern:
+
+   `https://KovelaHemaKoushikeswarReddy.github.io/open-app/?token={TOKEN}`
+
+   Replace `{TOKEN}` with the dynamic token you generate for each user.
+
+5. Edit the fallback URL inside `index.html` to point to your app's Play Store / App Store page or to a help page.
+
+## Notes
+
+- GitHub Pages hosts static files; no backend required.
+- The page works for unlimited unique tokens because it reads the query string via JavaScript.
+- Test on Android (Gmail app and Chrome) and iOS to confirm behavior; iOS behavior depends on whether the OS allows custom-scheme redirects from Safari.
+```
+
+---
+
+## Quick checklist
+
+* [ ] Create repo `open-app` (public) under the user **KovelaHemaKoushikeswarReddy**
+* [ ] Push `index.html` and `README.md` to `main`
+* [ ] Enable Pages in repo settings (branch `main`, folder `/`)
+* [ ] Use the final URL pattern in your email generator
+* [ ] Update fallback link in `index.html` to your app store page
+
+---
+
+If you'd like, I can now:
+
+* Produce a ZIP file containing these files (so you can upload directly), or
+* Generate a ready `git` command sequence you can run locally to create the repo and push the files.
+
+Which would you prefer? (ZIP or git commands)
