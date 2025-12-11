@@ -34,19 +34,13 @@
       const params = new URLSearchParams(window.location.search);
       const token = params.get("token") || "";
 
-      // Build your custom scheme deep link
+      // Build your custom scheme link
       const deepLink = "vigna://?token=" + encodeURIComponent(token);
 
-      // Try to open the custom URL scheme
+      // Attempt to open the app immediately
       window.location = deepLink;
 
-      // Fallback: open Play Store / website if app is not installed
-      setTimeout(() => {
-        // TODO: change to your fallback URL
-        window.location = "https://play.google.com/store/apps/details?id=com.yourapp";
-      }, 1200);
-
-      // Update manual button
+      // Update manual button and displayed token
       document.getElementById("openBtn").href = deepLink;
       document.getElementById("tokenDisplay").textContent = token || "(none)";
     });
